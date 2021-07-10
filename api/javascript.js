@@ -13,7 +13,7 @@ app.use(express.json()); // make use of express JSON middleware
 app.post("/api/javascript", async (req, res) => {
     let { codes } = req.body;
 
-    let fileName = `./tmp/${nanoid(9)}.js`;
+    let fileName = `/tmp/${nanoid(9)}.js`;
 
     writeFileSync(fileName, codes);
 
