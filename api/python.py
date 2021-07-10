@@ -6,7 +6,7 @@ import os
 app = FastAPI()
 
 
-@app.post("/")
+@app.post("/api/python")
 async def exec_code(request: Request):
     req = await request.json()
     filename = f"/tmp/{secrets.token_urlsafe(9)}.py"
