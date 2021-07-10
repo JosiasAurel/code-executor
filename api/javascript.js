@@ -2,11 +2,30 @@
 const { unlinkSync, writeFileSync } = require("fs");
 const { nanoid } = require("nanoid");
 const { spawn } = require("child_process");
+const express = require("express");
 
-const code = "console.log('Hello from code executor')";
+// create new express app
+const app = express();
 
-let fileName = `./api/${nanoid(9)}.js`;
+app.use(express.json()); // make use of express JSON middleware
 
-writeFileSync(fileName, code);
 
-let file = spawn(`node`, [fileName]).stdout.on("data", data => console.log(data.toString()));
+app.post("/api/javascript", async (req, res) => {
+    let { codes } = req.body;
+
+    let fileName = `./api/${nanoid(9)}.js`;
+
+    writeFileSync(fileName, codes);
+
+    let file = await spawn(`node`, [fileName]).stdout.on("data", data => {
+        res.json({
+            result: data.toString()
+        });
+        unlinkSync(fileName); // delete file
+    });
+
+});
+
+module.exports = app;
+
+app.listen(4000, () => console.log("Listening on port 4000"));
